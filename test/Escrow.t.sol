@@ -7,17 +7,14 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract EscrowTest is Test {
     address constant WETH_ADDRESS = address(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
-    address constant RANDOM_WHALE = address(0x8EB8a3b98659Cce290402893d0123abb75E3ab28);
+    address internal buyer = address(0x8EB8a3b98659Cce290402893d0123abb75E3ab28);
+    address internal seller;
 
     Escrow public escrow;
-
-    address internal buyer;
-    address internal seller;
 
     IERC20 weth = IERC20(WETH_ADDRESS);
 
     function setUp() public {
-        buyer = address(1);
         seller = address(2);
 
         vm.label(buyer, "Buyer");
@@ -27,14 +24,20 @@ contract EscrowTest is Test {
     }
 
     function testDeposit() public {
-        vm.prank(RANDOM_WHALE);
+        vm.prank(buyer);
+        escrow.deposit(WETH_ADDRESS, 100, seller);
 
-        // address receiver = vm.addr(1);
-
-        bytes32 depositId = escrow.deposit(WETH_ADDRESS, 100, seller);
-        console.log("depositId", depositId);
-        // assertEq(weth.balanceOf( address(vesting) ), 100);
+        assertEq(weth.balanceOf(address(escrow)), 100);
     }
 
-    function testWithdraw() public {}
+    function testWithdraw() public {
+        vm.prank(buyer);
+        uint256 depositId = escrow.deposit(WETH_ADDRESS, 100, seller);
+
+        skip(3 days);
+        vm.prank(seller);
+        escrow.withdraw(depositId);
+
+        assertEq(weth.balanceOf(seller), 100);
+    }
 }

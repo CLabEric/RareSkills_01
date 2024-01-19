@@ -3,6 +3,7 @@ pragma solidity 0.8.20;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "forge-std/console.sol";
 
 /// @title Escrow
 /// @author Eric Abt
@@ -19,10 +20,10 @@ contract Escrow {
         bool paid;
     }
 
-    mapping(bytes32 => Deposit) deposits;
+    mapping(uint256 => Deposit) deposits;
 
-    function deposit(address _token, uint256 _amount, address _seller) external returns (bytes32) {
-        bytes32 depositId = keccak256(abi.encode(block.timestamp, _token, _amount, msg.sender, _seller));
+    function deposit(address _token, uint256 _amount, address _seller) external returns (uint256) {
+        uint256 depositId = uint256(keccak256(abi.encode(block.timestamp, _token, _amount, msg.sender, _seller)));
 
         Deposit memory d = Deposit(_seller, _token, _amount, block.timestamp, false);
 
@@ -35,8 +36,9 @@ contract Escrow {
         return depositId;
     }
 
-    function withdraw(bytes32 _depositId) external {
+    function withdraw(uint256 _depositId) external {
         Deposit memory d = deposits[_depositId];
+        require(d.seller == msg.sender, "you are not the seller");
         require(d.paid == false, "already paid");
         require(block.timestamp - d.timeStamp >= 3 days, "Has not been 3 days");
 
