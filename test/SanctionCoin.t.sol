@@ -5,7 +5,6 @@ import {Test, console} from "forge-std/Test.sol";
 import {SanctionCoin} from "../src/SanctionCoin.sol";
 
 contract SanctionCoinTest is Test {
-
     SanctionCoin public sanctionCoin;
 
     address internal owner;
@@ -34,18 +33,8 @@ contract SanctionCoinTest is Test {
     function testSetSanction() public {
         sanctionCoin.setSanction(user1);
         vm.prank(user1);
-        
+
         vm.expectRevert("User not allowed to send/receive tokens");
         sanctionCoin.mint(5);
     }
-
-//     function testFuzz_SetNumber(uint256 x) public {
-//         counter.setNumber(x);
-//         assertEq(counter.number(), x);
-//     }
 }
-
-
-// Insurance claims
-// Book snow day
-// 100 hands - email sent

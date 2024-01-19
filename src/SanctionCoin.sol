@@ -9,7 +9,6 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 /// @author Eric Abt
 /// @notice A fungible token that allows an admin to ban specified addresses from sending and receiving tokens.
 contract SanctionCoin is ERC20("Sanction Coin", "SC"), Ownable(msg.sender) {
-
     /// @notice Maintains a list of banned users
     /// @dev Mapping
     mapping(address => bool) banned;
@@ -53,12 +52,7 @@ contract SanctionCoin is ERC20("Sanction Coin", "SC"), Ownable(msg.sender) {
     /// @param to address - user that is to receive tokens
     /// @param value uint256 - amount of tokens to transfer
     /// @return bool
-    function transferFrom(address from, address to, uint256 value) 
-        public 
-        override 
-        isNotSanctioned(to) 
-        returns (bool) 
-    {
+    function transferFrom(address from, address to, uint256 value) public override isNotSanctioned(to) returns (bool) {
         address spender = _msgSender();
         _spendAllowance(from, spender, value);
         _transfer(from, to, value);

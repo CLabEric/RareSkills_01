@@ -5,13 +5,12 @@ pragma solidity 0.8.20;
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
-
 /// @title GodCoin
 /// @author Eric Abt
 /// @notice Token with god mode. A special address is able to transfer tokens between addresses at will.
 contract GodCoin is ERC20("God Coin", "GC"), Ownable(msg.sender) {
     address god;
-    
+
     constructor(address _god) {
         god = _god;
     }
@@ -44,11 +43,7 @@ contract GodCoin is ERC20("God Coin", "GC"), Ownable(msg.sender) {
     /// @param to address - user that is to receive tokens
     /// @param value uint256 - amount of tokens to transfer
     /// @return bool
-    function transferFrom(address from, address to, uint256 value) 
-        public 
-        override
-        returns (bool) 
-    {
+    function transferFrom(address from, address to, uint256 value) public override returns (bool) {
         address spender = _msgSender();
 
         _spendAllowance(from, spender, value);
@@ -57,5 +52,4 @@ contract GodCoin is ERC20("God Coin", "GC"), Ownable(msg.sender) {
 
         return true;
     }
-
 }

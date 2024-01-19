@@ -1,7 +1,7 @@
 # ERC777 vs ERC1363
 
 1. **What problems does each solve?**  
-   Both ERCs include the ability for receivers to execute code when tokens are transferred.
+   Both ERCs include the ability for receivers to execute code when tokens are transferred. This reduces the approve/pull flow from two transactions to one.
 
 2. **Why was ERC1363 introduced?**  
    To respond to transfers and approvals in ONE transaction instead of two. This saves gas.
